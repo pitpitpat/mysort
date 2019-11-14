@@ -1,0 +1,14 @@
+*.o
+*.sh
+src/mysort
+src/coach
+src/quickSorter
+src/heapSorter
+inputs/Records100.bin.*
+inputs/Records1000.bin.*
+inputs/Records10000.bin.*
+inputs/Records100000.bin.*
+inputs/Records1000000.bin.*
+inputs/Records1000000.bin
+test*
+.DS_Store
