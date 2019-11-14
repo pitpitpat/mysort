@@ -83,6 +83,12 @@ void forkAndExecSorters(int recordsCount, int sortersCount, int coachNum, char s
 }
 
 
+void waitForSorters() {
+    int status;
+    while (wait(&status) > 0);
+}
+
+
 void getSorterRecordsAndStatisticsFromPipes(FileDescriptorsArray FDA, RecordsArraysArray *RAA, int recordsCount, double *sorterTimesArray) {
     int indexRange[2], sorterRecordsCount;
 
@@ -123,4 +129,33 @@ void mergeRecords(RecordsArraysArray *RAA, RecordsArray mergedRA) {
     }
 
     free(counters);
+}
+
+
+void calcSortersStatistics(double *sorterTimesArray, int sortersCount, double *minSorterTime, double *maxSorterTime, double *avgSorterTime) {
+    double sumSorterTimes = 0;
+
+    *minSorterTime = sorterTimesArray[0];
+    *maxSorterTime = sorterTimesArray[0];
+    for (int sorterNum = 0; sorterNum < sortersCount; sorterNum++) {
+        sumSorterTimes += sorterTimesArray[sorterNum];
+        if (sorterTimesArray[sorterNum] < *minSorterTime) {
+            *minSorterTime = sorterTimesArray[sorterNum];
+        }
+        if (sorterTimesArray[sorterNum] > *maxSorterTime) {
+            *maxSorterTime = sorterTimesArray[sorterNum];
+        }
+    }
+    *avgSorterTime = sumSorterTimes / sortersCount;
+}
+
+
+void sendStatisticsToCoordinator(int coachNum, double minSorterTime, double maxSorterTime, double avgSorterTime, double coachTime, int signalsCount) {
+    int pipeFD = openWritePipe(5, coachNum);
+    write(pipeFD, &minSorterTime, sizeof(double));
+    write(pipeFD, &maxSorterTime, sizeof(double));
+    write(pipeFD, &avgSorterTime, sizeof(double));
+    write(pipeFD, &coachTime, sizeof(double));
+    write(pipeFD, &signalsCount, sizeof(int));
+    close(pipeFD);
 }

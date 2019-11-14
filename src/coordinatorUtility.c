@@ -58,6 +58,10 @@ int countCoaches(char **args) {
         coachesCount++;
     }
 
+    if (coachesCount == 0) {
+        coachesCount = 1;
+    }
+
     return coachesCount;
 }
 
@@ -83,12 +87,23 @@ void forkAndExecCoaches(int coachesCount, char *inputFilepath, char **coachArgs,
     char *sortAlgorithm, *columnId;
 
     for (int coachNum = 0; coachNum < coachesCount; coachNum++) {
-        sortAlgorithm = coachArgs[coachNum * 2];
-        columnId = coachArgs[1 + (coachNum * 2)];
+        if (coachNum == 0 && coachesCount == 1 && coachArgs[0] == NULL) {
+            sortAlgorithm = "q";
+            columnId = "1";
+        }
+        else {
+            sortAlgorithm = coachArgs[coachNum * 2];
+            columnId = coachArgs[1 + (coachNum * 2)];
+        }
         pid = callAndCheckInt(fork(), "fork");
         // Coach process
         checkAndForkCoach(pid, coachNum, sortAlgorithm, columnId, inputFilepath, recordsCount);
     }
+}
+
+void waitForCoaches() {
+    int status;
+    while (wait(&status) > 0);
 }
 
 
@@ -124,4 +139,46 @@ void freeCoordinatorDataStructures(FileDescriptorsArray FDA, double *minSorterTi
     free(avgSorterTimesArray);
     free(coachTimesArray);
     free(coachSignalCountsArray);
+}
+
+void calcCoachesStatistics(double *coachTimesArray, int coachesCount, double *minCoachTime, double *maxCoachTime, double *avgCoachTime) {
+    double sumCoachTimes = 0;
+
+    *minCoachTime = coachTimesArray[0];
+    *maxCoachTime = coachTimesArray[0];
+    for (int coachNum = 0; coachNum < coachesCount; coachNum++) {
+        sumCoachTimes += coachTimesArray[coachNum];
+        if (coachTimesArray[coachNum] < *minCoachTime) {
+            *minCoachTime = coachTimesArray[coachNum];
+        }
+        if (coachTimesArray[coachNum] > *maxCoachTime) {
+            *maxCoachTime = coachTimesArray[coachNum];
+        }
+    }
+    *avgCoachTime = sumCoachTimes / coachesCount;
+}
+
+
+void printCoordinatorStatistics(int coachesCount, double *minSorterTimesArray, double *maxSorterTimesArray, double *avgSorterTimesArray, int *coachSignalCountsArray, double minCoachTime, double maxCoachTime, double avgCoachTime) {
+    printf("\n");
+    printf("Statistics for Each Coach\n\n");
+    for (int coachNum = 0; coachNum < coachesCount; coachNum++) {
+        printf("\tCoach %d\n", coachNum);
+        printf("\tMin Sorter Time: %f\n", minSorterTimesArray[coachNum]);
+        printf("\tMax Sorter Time: %f\n", maxSorterTimesArray[coachNum]);
+        printf("\tAverage Sorter Time: %f\n", avgSorterTimesArray[coachNum]);
+        printf("\tCoach Signals: %d\n\n", coachSignalCountsArray[coachNum]);
+    }
+
+    printf("Statistics for All Coaches\n\n");
+    printf("\tMin Coach Time: %f\n", minCoachTime);
+    printf("\tMax Coach Time: %f\n", maxCoachTime);
+    printf("\tAverage Coach Time: %f\n\n", avgCoachTime);
+
+}
+
+
+void printTurnaroundTime(double turnaroundTime) {
+    printf("Statistics for Coordinator\n\n");
+    printf("\tTurnaround Time: %f\n\n", turnaroundTime);
 }

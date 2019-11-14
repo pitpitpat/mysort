@@ -13,7 +13,10 @@ void freeCoachDataStructures(RecordsArraysArray, RecordsArray, FileDescriptorsAr
 void execSorter(int, int, char, char *, int, int, int);
 void checkAndExecSorter(pid_t, int, int, char, char *, int, int, int);
 void forkAndExecSorters(int, int, int, char, char *, int);
+void waitForSorters();
 void getSorterRecordsAndStatisticsFromPipes(FileDescriptorsArray, RecordsArraysArray *, int, double *);
 void mergeRecords(RecordsArraysArray *, RecordsArray);
+void calcSortersStatistics(double *, int, double *, double *, double *);
+void sendStatisticsToCoordinator(int, double, double, double, double, int);
 
 #endif

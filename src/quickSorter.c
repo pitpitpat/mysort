@@ -10,11 +10,11 @@
 
 
 int main(int argc, char *argv[]) {
-    RecordsArray RA;
-    int recordsCount;
     double startTime, endTime;
     struct tms tb1, tb2;
-    double ticsPerSecond, realTimeElapsed;
+    double ticsPerSecond, sorterTime;
+    RecordsArray RA;
+    int recordsCount;
     int coachNum = atoi(argv[1]);
     int sorterNum = atoi(argv[2]);
     char *filepath = argv[3];
@@ -25,6 +25,7 @@ int main(int argc, char *argv[]) {
     ticsPerSecond = (double) sysconf(_SC_CLK_TCK);
     startTime = (double) times(&tb1);
 
+    /////////////////// Measured Section ///////////////////
     recordsCount = calcRecordsCount(startRecordIndex, endRecordIndex);
 
     allocateRecordsArray(&RA, recordsCount, columnId);
@@ -32,11 +33,12 @@ int main(int argc, char *argv[]) {
     fillRecordsArrayFromFile(&RA, filepath, startRecordIndex);
 
     quickSort(RA);
+    ////////////////////////////////////////////////////////
 
     endTime = (double) times(&tb2);
-    realTimeElapsed = (endTime - startTime) / ticsPerSecond;
+    sorterTime = (endTime - startTime) / ticsPerSecond;
 
-    sendRecordsAndStatisticsThroughPipe(RA, realTimeElapsed, coachNum, sorterNum);
+    sendRecordsAndStatisticsToCoach(RA, sorterTime, coachNum, sorterNum);
 
     freeRecordsArray(RA);
 

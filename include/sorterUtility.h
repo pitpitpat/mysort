@@ -4,7 +4,7 @@
 #include "recordsArray.h"
 
 
-void sendRecordsAndStatisticsThroughPipe(RecordsArray, double, int, int);
+void sendRecordsAndStatisticsToCoach(RecordsArray, double, int, int);
 void sendSignalToParent(int);
 
 #endif

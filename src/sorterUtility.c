@@ -7,7 +7,7 @@
 #include "pipes.h"
 
 
-void sendRecordsAndStatisticsThroughPipe(RecordsArray RA, double timeElapsed, int idPrefix, int id) {
+void sendRecordsAndStatisticsToCoach(RecordsArray RA, double timeElapsed, int idPrefix, int id) {
     int pipeFD = openWritePipe(idPrefix, id);
     for (int i = 0; i < RA.recordsCount; i++) {
         write(pipeFD, RA.records[i], sizeof(Record));
