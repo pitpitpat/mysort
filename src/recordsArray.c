@@ -9,9 +9,9 @@
 
 
 void allocateRecordsArray(RecordsArray *RA, int recordsCount, int columnId) {
-    RA->records = (Record **) malloc(recordsCount * sizeof(Record *));
+    RA->records = (Record **) callAndCheckPointer(malloc(recordsCount * sizeof(Record *)), "malloc");
     for (int i = 0; i < recordsCount; i++) {
-        RA->records[i] = (Record *) malloc(sizeof(Record));
+        RA->records[i] = (Record *) callAndCheckPointer(malloc(sizeof(Record)), "malloc");
     }
     RA->recordsCount = recordsCount;
     RA->columnId = columnId;
@@ -34,7 +34,7 @@ void writeRecordsArrayToFile(RecordsArray RA, char *filepath) {
     char columnIdExtension[10];
     sprintf(columnIdExtension, ".%d", RA.columnId);
 
-    char *outputFilepath = (char *) malloc((strlen(filepath) + strlen(columnIdExtension) + 1) * sizeof(char));
+    char *outputFilepath = (char *) callAndCheckPointer(malloc((strlen(filepath) + strlen(columnIdExtension) + 1) * sizeof(char)), "malloc");
     strcpy(outputFilepath, filepath);
     strcat(outputFilepath, columnIdExtension);
 

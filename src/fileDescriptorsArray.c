@@ -1,12 +1,13 @@
 #include <stdlib.h>
 
 #include "fileDescriptorsArray.h"
+#include "utility.h"
 #include "pipes.h"
 
 
 
 void allocateFileDescriptorsArray(FileDescriptorsArray *FDA, int count) {
-    FDA->fileDescriptors = (int *) malloc(count * sizeof(int));
+    FDA->fileDescriptors = (int *) callAndCheckPointer(malloc(count * sizeof(int)), "malloc");
     FDA->count = count;
 }
 

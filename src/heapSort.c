@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "heapSort.h"
+#include "utility.h"
 #include "record.h"
 
 
@@ -33,7 +34,7 @@ void heapify(MaxHeap *maxHeap, int index, int columnId) {
 
 
 MaxHeap* allocateMaxHeap(RecordsArray RA) {
-    MaxHeap *maxHeap = (MaxHeap *) malloc(sizeof(MaxHeap));
+    MaxHeap *maxHeap = (MaxHeap *) callAndCheckPointer(malloc(sizeof(MaxHeap)), "malloc");
     maxHeap->array = RA.records;
     maxHeap->size = RA.recordsCount;
     return maxHeap;

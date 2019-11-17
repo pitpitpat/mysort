@@ -110,11 +110,11 @@ void waitForCoaches() {
 
 void allocateCoordinatorDataStructures(FileDescriptorsArray *FDA, double **minSorterTimesArray, double **maxSorterTimesArray, double **avgSorterTimesArray, double **coachTimesArray, int **coachSignalCountsArray, int coachesCount) {
     allocateFileDescriptorsArray(FDA, coachesCount);
-    *minSorterTimesArray = (double *) malloc(coachesCount * sizeof(double));
-    *maxSorterTimesArray = (double *) malloc(coachesCount * sizeof(double));
-    *avgSorterTimesArray = (double *) malloc(coachesCount * sizeof(double));
-    *coachTimesArray = (double *) malloc(coachesCount * sizeof(double));
-    *coachSignalCountsArray = (int *) malloc(coachesCount * sizeof(int));
+    *minSorterTimesArray = (double *) callAndCheckPointer(malloc(coachesCount * sizeof(double)), "malloc");
+    *maxSorterTimesArray = (double *) callAndCheckPointer(malloc(coachesCount * sizeof(double)), "malloc");
+    *avgSorterTimesArray = (double *) callAndCheckPointer(malloc(coachesCount * sizeof(double)), "malloc");
+    *coachTimesArray = (double *) callAndCheckPointer(malloc(coachesCount * sizeof(double)), "malloc");
+    *coachSignalCountsArray = (int *) callAndCheckPointer(malloc(coachesCount * sizeof(int)), "malloc");
 }
 
 

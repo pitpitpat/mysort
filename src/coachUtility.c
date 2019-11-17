@@ -16,7 +16,7 @@ void allocateCoachDataStructures(RecordsArraysArray *RAA, RecordsArray *mergedRA
     allocateRecordsArraysArray(RAA, sortersCount, columnId, recordsCount);
     allocateRecordsArray(mergedRA, recordsCount, columnId);
     allocateFileDescriptorsArray(FDA, sortersCount);
-    *sorterTimesArray = (double *) malloc(sortersCount * sizeof(double));
+    *sorterTimesArray = (double *) callAndCheckPointer(malloc(sortersCount * sizeof(double)), "malloc");
 }
 
 
@@ -106,7 +106,7 @@ void getSorterRecordsAndStatisticsFromPipes(FileDescriptorsArray FDA, RecordsArr
 
 
 void mergeRecords(RecordsArraysArray *RAA, RecordsArray mergedRA) {
-    int *counters = (int *) malloc(RAA->count * sizeof(int));
+    int *counters = (int *) callAndCheckPointer(malloc(RAA->count * sizeof(int)), "malloc");
     for (int i = 0; i < RAA->count; i++) {
         counters[i] = 0;
     }
