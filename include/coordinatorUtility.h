@@ -5,6 +5,7 @@
 
 
 void getCommandLineArgs(int, char **, char **);
+int columnIdAlreadyExists(char **, char *);
 int getFileRecordsCount(char *);
 int countCoaches(char **);
 void forkCoach(int, char *, char *, char *, int);
