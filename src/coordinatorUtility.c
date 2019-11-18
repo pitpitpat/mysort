@@ -17,19 +17,31 @@ void getCommandLineArgs(int argc, char **argv, char **arguments) {
         if ((strcmp(argv[i], "-f") == 0) && ((strcmp(argv[i+1], "-h") != 0)) && ((strcmp(argv[i+1], "-q") != 0))) {
             arguments[0] = argv[i+1];
         } else if (strcmp(argv[i], "-h") == 0 && ((strcmp(argv[i+1], "-q") != 0)) && ((strcmp(argv[i+1], "-f") != 0))) {
-            if (numberOfCoaches < 4) {
+            if (numberOfCoaches < 4 && !columnIdAlreadyExists(arguments, argv[i+1])) {
                 arguments[1 + (numberOfCoaches * 2)] = &(argv[i][1]);
                 arguments[2 + (numberOfCoaches * 2)] = argv[i+1];
                 numberOfCoaches++;
             }
         } else if (strcmp(argv[i], "-q") == 0 && ((strcmp(argv[i+1], "-h") != 0)) && ((strcmp(argv[i+1], "-f") != 0))) {
-            if (numberOfCoaches < 4) {
+            if (numberOfCoaches < 4 && !columnIdAlreadyExists(arguments, argv[i+1])) {
                 arguments[1 + (numberOfCoaches * 2)] = &(argv[i][1]);
                 arguments[2 + (numberOfCoaches * 2)] = argv[i+1];
                 numberOfCoaches++;
             }
         }
     }
+}
+
+
+int columnIdAlreadyExists(char **arguments, char *columnId) {
+    int alreadyExists = 0;
+    for (int i = 2; i < 9; i += 2) {
+        if (arguments[i] != NULL && !strcmp(arguments[i], columnId)) {
+            alreadyExists = 1;
+            break;
+        }
+    }
+    return alreadyExists;
 }
 
 
